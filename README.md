@@ -12,5 +12,6 @@ Below is a screenshot of the deployed applicationL
 
 Link for deployed application:
 
+https://bryanjperez.github.io/StayOrganized/
 
 
