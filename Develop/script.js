@@ -1,20 +1,18 @@
+//tell browswer to load 1)html & 2) css first
 $(document).ready(function () {
 
-    //display current time & day
-    $("#currentDay").text(moment().format("MMMM Do YYYY, h:mm:ss a")); // use of moment.js
+    // display current date at top of caledar
+    $("#currentDay").text(moment().format("MMMM D YYYY, h:mm:ss a"));
 
-    // event listener for saving a task on the calendar
+    // event listener for button click
     $(".save").on("click", function () {
-
-        console.log(this);
-        var task = $(this).siblings(".task").val();
+        var text = $(this).siblings(".task").val();
         var time = $(this).parent().attr("id");
 
-        //save task and time to localStorage 
-        localStorage.setItem(time, task);
+        //save items in local storage.
+        localStorage.setItem(time, text);
     })
-
-    //load data saved to local storage on the scheduler
+    // set parameters for local storage information
     $("#hr9 .task").val(localStorage.getItem("hr9"));
     $("#hr10 .task").val(localStorage.getItem("hr10"));
     $("#hr11 .task").val(localStorage.getItem("hr11"));
@@ -25,35 +23,37 @@ $(document).ready(function () {
     $("#hr16 .task").val(localStorage.getItem("hr16"));
     $("#hr17 .task").val(localStorage.getItem("hr17"));
 
-    // create function to keep tracck of the current hour so it can be used in the if-else statements to change color formatting
-
-    function timeCompare() {
-        //establihs variable for current time by using moment.js
+    // Set current hour to compare to work day scheduler task/time
+    function trackHours() {
         var currentTime = moment().hour();
+        console.log(currentTime)
 
-        // create conditional logic via if-else function using jQuery 'each' method to loop through time sets
+        // If/else function to compare scheduled tasks' times against current time
+
         $(".time").each(function () {
-            var timeHour = parseInt($(this).attr("id").split("hour")[1]);
-            console.log(timeHour, currentTime)
+            var hourBlock = parseInt($(this).attr("id").split("hr")[1]);
+            console.log(hourBlock, currentTime)
 
-            //establish if-else logic to trigger changes on the frontend re: colors of time sets
-
-            if (timeHour < currentTime) {
+            if (hourBlock < currentTime) {
                 $(this).addClass("past");
                 $(this).removeClass("future");
                 $(this).removeClass("present");
-            }
-            else if (timeHour === currentTime) {
-                $(this).removeClass("past");
+
+            } else if (hourBlock === currentTime) {
                 $(this).addClass("present");
+                $(this).removeClass("past");
                 $(this).removeClass("future");
-            }
-            else {
+
+            } else {
+                $(this).addClass("future");
                 $(this).removeClass("present");
                 $(this).removeClass("past");
-                $(this).addClass("future");
             }
+
         })
+
     }
-    timeCompare();
+    // continue running function upon browser refresh
+    trackHours();
+
 })
